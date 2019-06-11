@@ -197,16 +197,11 @@ var nextTick =(function () {
             process.nextTick(flush);
         };
 
-    } else if (typeof setImmediate === "function") {
-        // In IE10, Node.js 0.9+, or https://github.com/NobleJS/setImmediate
-        if (typeof window !== "undefined") {
-            requestTick = setImmediate.bind(window, flush);
-        } else {
-            requestTick = function () {
-                setImmediate(flush);
-            };
-        }
-
+    } else if ((typeof setImmediate === "function") && (typeof window === "undefined")) {
+        // Node.js 0.9+, or https://github.com/NobleJS/setImmediate
+        requestTick = function () {
+            setImmediate(flush);
+        };
     } else if (typeof MessageChannel !== "undefined") {
         // modern browsers
         // http://www.nonblocking.io/2011/06/windownexttick.html
